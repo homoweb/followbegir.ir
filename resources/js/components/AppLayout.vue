@@ -4,6 +4,9 @@ import { router, usePage } from '@inertiajs/vue3';
 import AppLink from '@/components/AppLink.vue';
 import { toFa } from '@/lib/ui';
 import adminRoutes from '@/routes/admin';
+import adminOrders from '@/routes/admin/orders';
+import adminProducts from '@/routes/admin/products';
+import adminUsers from '@/routes/admin/users';
 import mainRoutes from '@/routes/main';
 import panelRoutes from '@/routes/panel';
 import type { SharedProps } from '@/types/followbegir';
@@ -85,6 +88,28 @@ const landingNav = [
     { href: '#how', label: 'مراحل سفارش' },
     { href: '#faq', label: 'سوالات متداول' },
 ];
+
+// The admin header menu. Detail pages (create/show/edit) live under their
+// section's index URL, so highlighting by path prefix covers them too.
+const adminNav = computed(() => [
+    { href: adminUsers.index.url(), label: 'کاربران' },
+    { href: adminProducts.index.url(), label: 'محصولات' },
+    { href: adminOrders.index.url(), label: 'سفارش‌ها' },
+]);
+
+/**
+ * Path-prefix match against the current Inertia URL; parsed with a dummy
+ * base so it stays SSR-safe (no window access).
+ */
+const isActiveAdminNav = (href: string): boolean => {
+    const current = new URL(page.url, 'http://localhost');
+    const target = new URL(href, 'http://localhost');
+
+    return (
+        current.pathname === target.pathname ||
+        current.pathname.startsWith(`${target.pathname}/`)
+    );
+};
 </script>
 
 <template>
@@ -108,7 +133,7 @@ const landingNav = [
                     فالو‌بگیر
                     <span
                         v-if="kind === 'admin'"
-                        class="rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-300 ring-1 ring-inset ring-amber-500/30"
+                        class="rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-300 ring-1 ring-amber-500/30 ring-inset"
                     >
                         مدیریت
                     </span>
@@ -128,6 +153,25 @@ const landingNav = [
                     </a>
                 </nav>
 
+                <nav
+                    v-if="kind === 'admin'"
+                    class="hidden items-center gap-1 text-sm md:flex"
+                >
+                    <AppLink
+                        v-for="item in adminNav"
+                        :key="item.href"
+                        :href="item.href"
+                        class="rounded-lg px-3 py-1.5 transition"
+                        :class="
+                            isActiveAdminNav(item.href)
+                                ? 'bg-white/10 font-medium text-white'
+                                : 'text-slate-300 hover:text-white'
+                        "
+                    >
+                        {{ item.label }}
+                    </AppLink>
+                </nav>
+
                 <nav class="ms-auto flex items-center gap-3 text-sm">
                     <template v-if="user">
                         <AppLink
@@ -135,7 +179,9 @@ const landingNav = [
                             :href="urls.panel.orders"
                             class="rounded-lg border border-white/10 px-3 py-1.5 text-slate-200 transition hover:border-indigo-500/50 hover:text-white"
                         >
-                            {{ kind === 'admin' ? 'پنل کاربری' : 'سفارش‌های من' }}
+                            {{
+                                kind === 'admin' ? 'پنل کاربری' : 'سفارش‌های من'
+                            }}
                         </AppLink>
                         <AppLink
                             v-else-if="user.is_admin"
@@ -182,12 +228,33 @@ const landingNav = [
                     </template>
                 </nav>
             </div>
+
+            <nav
+                v-if="kind === 'admin'"
+                class="border-t border-white/10 md:hidden"
+            >
+                <div
+                    :class="containerClass"
+                    class="flex gap-1 overflow-x-auto px-4 py-2 text-sm"
+                >
+                    <AppLink
+                        v-for="item in adminNav"
+                        :key="item.href"
+                        :href="item.href"
+                        class="shrink-0 rounded-lg px-3 py-1.5 transition"
+                        :class="
+                            isActiveAdminNav(item.href)
+                                ? 'bg-white/10 font-medium text-white'
+                                : 'text-slate-300 hover:text-white'
+                        "
+                    >
+                        {{ item.label }}
+                    </AppLink>
+                </div>
+            </nav>
         </header>
 
-        <main
-            :class="containerClass"
-            class="mx-auto w-full flex-1 px-4 py-8"
-        >
+        <main :class="containerClass" class="mx-auto w-full flex-1 px-4 py-8">
             <div
                 v-for="item in flashItems"
                 :key="item.key"
@@ -215,10 +282,7 @@ const landingNav = [
         </main>
 
         <footer class="border-t border-white/10">
-            <div
-                :class="containerClass"
-                class="mx-auto px-4 py-12"
-            >
+            <div :class="containerClass" class="mx-auto px-4 py-12">
                 <div class="grid gap-10 md:grid-cols-4">
                     <div class="md:col-span-2">
                         <div
@@ -235,8 +299,8 @@ const landingNav = [
                             class="mt-4 max-w-sm text-sm leading-7 text-slate-400"
                         >
                             مرجع سفارش فالوور و لایک اینستاگرام با تحویل سریع،
-                            پرداخت امن بانکی و پشتیبانی واقعی — بدون نیاز به
-                            رمز پیج.
+                            پرداخت امن بانکی و پشتیبانی واقعی — بدون نیاز به رمز
+                            پیج.
                         </p>
                     </div>
 
