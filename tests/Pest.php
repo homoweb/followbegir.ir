@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\ResetsPermissionCache;
 use Tests\TestCase;
 
 /*
@@ -15,7 +16,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
-    ->use(RefreshDatabase::class)
+    ->use(RefreshDatabase::class, ResetsPermissionCache::class)
     ->in('Feature');
 
 /*

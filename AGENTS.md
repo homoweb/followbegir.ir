@@ -1,4 +1,15 @@
 <laravel-boost-guidelines>
+# Coding Rules
+
+- Act as a senior Laravel/Vue developer.
+- Inspect only files relevant to the requested task.
+- Do not analyze the entire repository unless necessary.
+- Make changes directly instead of only explaining them.
+- Avoid unnecessary refactoring.
+- Do not modify unrelated files.
+- Prefer existing project patterns.
+- Keep responses concise.
+- After completing the task, provide a short summary and suggested commit message.
 === foundation rules ===
 
 # Laravel Boost Guidelines

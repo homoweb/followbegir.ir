@@ -38,8 +38,38 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'siteUrl' => config('followbegir.main_url'),
+            // All cross-domain targets are generated server-side from named
+            // routes, so the frontend never has to concatenate URL fragments.
+            'urls' => [
+                'main' => [
+                    'home' => route('main.home'),
+                ],
+                'panel' => [
+                    'home' => route('panel.home'),
+                    'orders' => route('panel.orders.index'),
+                    'login' => route('panel.login'),
+                    'register' => route('panel.register'),
+                    'logout' => route('panel.logout'),
+                ],
+                'admin' => [
+                    'home' => route('admin.home'),
+                    'login' => route('admin.login'),
+                    'logout' => route('admin.logout'),
+                ],
+            ],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'is_admin' => $request->user()->hasRole('admin'),
+                ] : null,
+            ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'info' => fn () => $request->session()->get('info'),
             ],
         ];
     }
