@@ -11,8 +11,7 @@ const faNumber = new Intl.NumberFormat('fa-IR');
 export const toFa = (value: number | string): string =>
     faNumber.format(Number(value));
 
-export const formatPrice = (price: number): string =>
-    `${toFa(price)} تومان`;
+export const formatPrice = (price: number): string => `${toFa(price)} تومان`;
 
 export const formatDate = (iso: string | null | undefined): string => {
     if (!iso) {

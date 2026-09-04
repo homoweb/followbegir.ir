@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import { toFa } from '@/lib/ui';
 import adminRoutes from '@/routes/admin';
 import adminOrders from '@/routes/admin/orders';
@@ -51,6 +52,12 @@ const logout = (): void => {
         },
     );
 };
+
+/**
+ * One consistent loading state for every action the layout fires (currently
+ * only logout): the button shows the shared spinner while the XHR is pending.
+ */
+const isBusy = computed((): boolean => loggingOut.value);
 
 const hidden = ref<Record<string, boolean>>({});
 watch(
@@ -204,11 +211,12 @@ const isActiveAdminNav = (href: string): boolean => {
 
                         <button
                             type="button"
-                            :disabled="loggingOut"
-                            class="rounded-lg border border-white/10 px-3 py-1.5 text-slate-300 transition hover:border-rose-500/40 hover:text-rose-400 disabled:opacity-50"
+                            :disabled="isBusy"
+                            class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-1.5 text-slate-300 transition hover:border-rose-500/40 hover:text-rose-400 disabled:opacity-50"
                             @click="logout"
                         >
-                            {{ loggingOut ? 'در حال خروج…' : 'خروج' }}
+                            <AppSpinner v-if="isBusy" class="size-4" />
+                            {{ isBusy ? 'در حال خروج…' : 'خروج' }}
                         </button>
                     </template>
 

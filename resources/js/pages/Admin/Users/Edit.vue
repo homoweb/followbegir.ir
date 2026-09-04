@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import adminUsers from '@/routes/admin/users';
 import type { UserRow } from '@/types/followbegir';
 
@@ -42,8 +43,8 @@ const submit = (): void => {
                     v-model="form.name"
                     type="text"
                     required
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
-                >
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
+                />
                 <p v-if="form.errors.name" class="mt-2 text-sm text-rose-400">
                     {{ form.errors.name }}
                 </p>
@@ -62,8 +63,8 @@ const submit = (): void => {
                     dir="ltr"
                     type="email"
                     required
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                >
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                />
                 <p v-if="form.errors.email" class="mt-2 text-sm text-rose-400">
                     {{ form.errors.email }}
                 </p>
@@ -82,8 +83,8 @@ const submit = (): void => {
                     v-model="form.password"
                     dir="ltr"
                     type="password"
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                >
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                />
                 <p
                     v-if="form.errors.password"
                     class="mt-2 text-sm text-rose-400"
@@ -104,8 +105,8 @@ const submit = (): void => {
                     v-model="form.password_confirmation"
                     dir="ltr"
                     type="password"
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                >
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                />
             </div>
 
             <label class="flex items-center gap-2 text-sm text-slate-300">
@@ -113,7 +114,7 @@ const submit = (): void => {
                     v-model="form.is_active"
                     type="checkbox"
                     class="size-4 rounded border-white/20 bg-slate-950"
-                >
+                />
                 حساب فعال باشد
             </label>
 
@@ -127,7 +128,7 @@ const submit = (): void => {
                 <select
                     id="role"
                     v-model="form.role"
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
                 >
                     <option value="user">کاربر</option>
                     <option value="admin">مدیر</option>
@@ -140,8 +141,9 @@ const submit = (): void => {
             <button
                 type="submit"
                 :disabled="form.processing"
-                class="w-full rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
+                class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
             >
+                <AppSpinner v-if="form.processing" class="size-4" />
                 ذخیره تغییرات
             </button>
         </form>

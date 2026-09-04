@@ -3,6 +3,7 @@ import { usePage, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import { formatDate, toFa } from '@/lib/ui';
 import adminUsers from '@/routes/admin/users';
 import type { Paginated, SharedProps, UserRow } from '@/types/followbegir';
@@ -16,17 +17,36 @@ const page = usePage();
 const me = computed(() => (page.props as unknown as SharedProps).auth.user);
 
 const search = ref<string>(props.filters.q ?? '');
+const navigating = ref(false);
+const pending = ref<number | null>(null);
 
 const applySearch = (): void => {
+    navigating.value = true;
+
     router.get(
         adminUsers.index.url(),
         search.value.trim() ? { q: search.value.trim() } : {},
-        { preserveState: true },
+        {
+            preserveState: true,
+            onFinish: () => {
+                navigating.value = false;
+            },
+        },
     );
 };
 
 const toggle = (user: UserRow): void => {
-    router.patch(adminUsers.toggle.url(user));
+    pending.value = user.id;
+
+    router.patch(
+        adminUsers.toggle.url(user),
+        {},
+        {
+            onFinish: () => {
+                pending.value = null;
+            },
+        },
+    );
 };
 
 const destroy = (user: UserRow): void => {
@@ -34,18 +54,34 @@ const destroy = (user: UserRow): void => {
         return;
     }
 
-    router.delete(adminUsers.destroy.url(user));
+    pending.value = user.id;
+
+    router.delete(adminUsers.destroy.url(user), {
+        onFinish: () => {
+            pending.value = null;
+        },
+    });
 };
 
 const go = (target: number): void => {
-    if (target < 1 || target > props.users.last_page) {
+    if (target < 1 || target > props.users.last_page || navigating.value) {
         return;
     }
 
-    router.get(adminUsers.index.url(), {
-        page: target,
-        ...(search.value.trim() ? { q: search.value.trim() } : {}),
-    });
+    navigating.value = true;
+
+    router.get(
+        adminUsers.index.url(),
+        {
+            page: target,
+            ...(search.value.trim() ? { q: search.value.trim() } : {}),
+        },
+        {
+            onFinish: () => {
+                navigating.value = false;
+            },
+        },
+    );
 };
 </script>
 
@@ -66,12 +102,14 @@ const go = (target: number): void => {
                 v-model="search"
                 type="search"
                 placeholder="جستجو در نام یا ایمیل..."
-                class="w-full max-w-sm rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-500/60"
-            >
+                class="w-full max-w-sm rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 transition outline-none focus:border-indigo-500/60"
+            />
             <button
                 type="submit"
-                class="rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-200 transition hover:border-indigo-500/50"
+                :disabled="navigating"
+                class="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-200 transition hover:border-indigo-500/50 disabled:opacity-50"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 جستجو
             </button>
         </form>
@@ -102,7 +140,7 @@ const go = (target: number): void => {
                             <span
                                 v-for="role in user.roles"
                                 :key="role"
-                                class="me-1 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs text-indigo-400 ring-1 ring-inset ring-indigo-500/30"
+                                class="me-1 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs text-indigo-400 ring-1 ring-indigo-500/30 ring-inset"
                             >
                                 {{ role === 'admin' ? 'مدیر' : role }}
                             </span>
@@ -125,9 +163,14 @@ const go = (target: number): void => {
                                 <button
                                     v-if="user.id !== me?.id"
                                     type="button"
-                                    class="text-amber-400 hover:text-amber-300"
+                                    :disabled="pending === user.id"
+                                    class="inline-flex items-center gap-1.5 text-amber-400 transition hover:text-amber-300 disabled:opacity-50"
                                     @click="toggle(user)"
                                 >
+                                    <AppSpinner
+                                        v-if="pending === user.id"
+                                        class="size-3"
+                                    />
                                     {{ user.is_active ? 'غیرفعال' : 'فعال' }}
                                 </button>
                                 <AppLink
@@ -139,9 +182,14 @@ const go = (target: number): void => {
                                 <button
                                     v-if="user.id !== me?.id"
                                     type="button"
-                                    class="text-rose-400 hover:text-rose-300"
+                                    :disabled="pending === user.id"
+                                    class="inline-flex items-center gap-1.5 text-rose-400 transition hover:text-rose-300 disabled:opacity-50"
                                     @click="destroy(user)"
                                 >
+                                    <AppSpinner
+                                        v-if="pending === user.id"
+                                        class="size-3"
+                                    />
                                     حذف
                                 </button>
                             </div>
@@ -157,10 +205,11 @@ const go = (target: number): void => {
         >
             <button
                 type="button"
-                class="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
-                :disabled="users.current_page <= 1"
+                :disabled="users.current_page <= 1 || navigating"
+                class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
                 @click="go(users.current_page - 1)"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 قبلی
             </button>
             <span class="text-sm text-slate-400">
@@ -169,10 +218,11 @@ const go = (target: number): void => {
             </span>
             <button
                 type="button"
-                class="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
-                :disabled="users.current_page >= users.last_page"
+                :disabled="users.current_page >= users.last_page || navigating"
+                class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
                 @click="go(users.current_page + 1)"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 بعدی
             </button>
         </div>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import {
     badgeClass,
     formatDate,
@@ -16,12 +18,24 @@ import type { Order, Paginated } from '@/types/followbegir';
 
 const props = defineProps<{ orders: Paginated<Order> }>();
 
+const navigating = ref(false);
+
 const go = (target: number): void => {
-    if (target < 1 || target > props.orders.last_page) {
+    if (target < 1 || target > props.orders.last_page || navigating.value) {
         return;
     }
 
-    router.get(panelOrders.index.url(), { page: target });
+    navigating.value = true;
+
+    router.get(
+        panelOrders.index.url(),
+        { page: target },
+        {
+            onFinish: () => {
+                navigating.value = false;
+            },
+        },
+    );
 };
 </script>
 
@@ -72,15 +86,23 @@ const go = (target: number): void => {
                             {{ toFa(order.total_price) }} تومان
                         </td>
                         <td class="px-4 py-3">
-                            <span :class="badgeClass(statusBadge(order.status))">
+                            <span
+                                :class="badgeClass(statusBadge(order.status))"
+                            >
                                 {{ ORDER_STATUS_LABELS[order.status] }}
                             </span>
                         </td>
                         <td class="px-4 py-3">
                             <span
-                                :class="badgeClass(paymentBadge(order.payment_status))"
+                                :class="
+                                    badgeClass(
+                                        paymentBadge(order.payment_status),
+                                    )
+                                "
                             >
-                                {{ PAYMENT_STATUS_LABELS[order.payment_status] }}
+                                {{
+                                    PAYMENT_STATUS_LABELS[order.payment_status]
+                                }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-slate-400">
@@ -105,10 +127,11 @@ const go = (target: number): void => {
         >
             <button
                 type="button"
-                class="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
-                :disabled="orders.current_page <= 1"
+                :disabled="orders.current_page <= 1 || navigating"
+                class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
                 @click="go(orders.current_page - 1)"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 قبلی
             </button>
             <span class="text-sm text-slate-400">
@@ -117,10 +140,13 @@ const go = (target: number): void => {
             </span>
             <button
                 type="button"
-                class="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
-                :disabled="orders.current_page >= orders.last_page"
+                :disabled="
+                    orders.current_page >= orders.last_page || navigating
+                "
+                class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
                 @click="go(orders.current_page + 1)"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 بعدی
             </button>
         </div>

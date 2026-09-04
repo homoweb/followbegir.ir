@@ -7,11 +7,26 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/*
+ * Tailwind v4 preflight resets buttons to `cursor: default`; every enabled
+ * button must feel clickable, and a disabled one must show why it is inert.
+ */
+@layer base {
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+        cursor: pointer;
+    }
+
+    button:disabled,
+    [role='button']:disabled {
+        cursor: not-allowed;
+    }
+}
+
 @theme inline {
     --font-sans:
-        Vazirmatn, ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        Vazirmatn, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 @theme {

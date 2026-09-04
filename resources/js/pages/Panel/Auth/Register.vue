@@ -2,6 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import panel from '@/routes/panel';
 
 const form = useForm({
@@ -41,8 +42,8 @@ const submit = (): void => {
                         type="text"
                         required
                         autofocus
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                     <p
                         v-if="form.errors.name"
                         class="mt-2 text-sm text-rose-400"
@@ -64,8 +65,8 @@ const submit = (): void => {
                         dir="ltr"
                         type="email"
                         required
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                     <p
                         v-if="form.errors.email"
                         class="mt-2 text-sm text-rose-400"
@@ -87,8 +88,8 @@ const submit = (): void => {
                         dir="ltr"
                         type="password"
                         required
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                     <p
                         v-if="form.errors.password"
                         class="mt-2 text-sm text-rose-400"
@@ -110,15 +111,16 @@ const submit = (): void => {
                         dir="ltr"
                         type="password"
                         required
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                 </div>
 
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="w-full rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
+                    class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
                 >
+                    <AppSpinner v-if="form.processing" class="size-4" />
                     ثبت‌نام
                 </button>
 

@@ -2,6 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import {
     badgeClass,
     formatDate,
@@ -123,7 +124,11 @@ const submit = (): void => {
                         <td class="px-4 py-3">
                             <span
                                 v-if="payment.status"
-                                :class="badgeClass(TXN_STATUS_BADGES[payment.status])"
+                                :class="
+                                    badgeClass(
+                                        TXN_STATUS_BADGES[payment.status],
+                                    )
+                                "
                             >
                                 {{ TXN_STATUS_LABELS[payment.status] }}
                             </span>
@@ -160,7 +165,7 @@ const submit = (): void => {
                 <select
                     id="status"
                     v-model="form.status"
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
                 >
                     <option
                         v-for="option in statusOptions"
@@ -170,10 +175,7 @@ const submit = (): void => {
                         {{ option.label }}
                     </option>
                 </select>
-                <p
-                    v-if="form.errors.status"
-                    class="mt-2 text-sm text-rose-400"
-                >
+                <p v-if="form.errors.status" class="mt-2 text-sm text-rose-400">
                     {{ form.errors.status }}
                 </p>
                 <p class="mt-2 text-xs text-slate-500">
@@ -183,8 +185,9 @@ const submit = (): void => {
             <button
                 type="submit"
                 :disabled="form.processing"
-                class="mt-4 w-full rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
+                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
             >
+                <AppSpinner v-if="form.processing" class="size-4" />
                 ذخیره وضعیت
             </button>
         </form>

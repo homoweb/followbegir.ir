@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import { toFa } from '@/lib/ui';
 import paymentRoutes from '@/routes/main/payment';
 import type { Order } from '@/types/followbegir';
 
 const props = defineProps<{ order: Order }>();
+
+const submitting = ref(false);
 
 const csrf = computed(
     () =>
@@ -61,13 +64,24 @@ const summary = computed(() => [
                 </div>
             </div>
 
-            <form :action="startUrl" method="post" class="mt-8">
-                <input type="hidden" name="_token" :value="csrf">
+            <form
+                :action="startUrl"
+                method="post"
+                class="mt-8"
+                @submit="submitting = true"
+            >
+                <input type="hidden" name="_token" :value="csrf" />
                 <button
                     type="submit"
-                    class="w-full rounded-xl bg-emerald-500 px-4 py-3 font-medium text-white transition hover:bg-emerald-400"
+                    :disabled="submitting"
+                    class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 font-medium text-white transition hover:bg-emerald-400 disabled:opacity-50"
                 >
-                    پرداخت با درگاه بانکی
+                    <AppSpinner v-if="submitting" class="size-4" />
+                    {{
+                        submitting
+                            ? 'در حال انتقال به درگاه…'
+                            : 'پرداخت با درگاه بانکی'
+                    }}
                 </button>
             </form>
 

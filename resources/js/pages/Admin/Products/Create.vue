@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import adminProducts from '@/routes/admin/products';
 import type { Option, PriceTier } from '@/types/followbegir';
 
@@ -55,8 +56,8 @@ const submit = (): void => {
                     v-model="form.title"
                     type="text"
                     required
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
-                >
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
+                />
                 <p v-if="form.errors.title" class="mt-2 text-sm text-rose-400">
                     {{ form.errors.title }}
                 </p>
@@ -73,7 +74,7 @@ const submit = (): void => {
                     id="description"
                     v-model="form.description"
                     rows="3"
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
                 />
             </div>
 
@@ -88,7 +89,7 @@ const submit = (): void => {
                     <select
                         id="platform"
                         v-model="form.platform"
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
                     >
                         <option
                             v-for="option in platforms"
@@ -116,7 +117,7 @@ const submit = (): void => {
                     <select
                         id="type"
                         v-model="form.type"
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 outline-none transition focus:border-indigo-500/60"
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-slate-100 transition outline-none focus:border-indigo-500/60"
                     >
                         <option
                             v-for="option in types"
@@ -148,8 +149,8 @@ const submit = (): void => {
                         v-model.number="form.min_quantity"
                         dir="ltr"
                         type="number"
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                 </div>
                 <div>
                     <label
@@ -163,8 +164,8 @@ const submit = (): void => {
                         v-model.number="form.max_quantity"
                         dir="ltr"
                         type="number"
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                 </div>
                 <div>
                     <label
@@ -178,8 +179,8 @@ const submit = (): void => {
                         v-model.number="form.step_quantity"
                         dir="ltr"
                         type="number"
-                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                    >
+                        class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                    />
                 </div>
             </div>
 
@@ -195,8 +196,8 @@ const submit = (): void => {
                     v-model.number="form.base_price"
                     dir="ltr"
                     type="number"
-                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
-                >
+                    class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
+                />
                 <p
                     v-if="form.errors.base_price"
                     class="mt-2 text-sm text-rose-400"
@@ -218,10 +219,7 @@ const submit = (): void => {
                         افزودن پله
                     </button>
                 </div>
-                <p
-                    v-if="form.errors.prices"
-                    class="mb-2 text-sm text-rose-400"
-                >
+                <p v-if="form.errors.prices" class="mb-2 text-sm text-rose-400">
                     {{ form.errors.prices }}
                 </p>
                 <div
@@ -235,21 +233,21 @@ const submit = (): void => {
                         type="number"
                         placeholder="از"
                         class="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-left text-slate-100 outline-none focus:border-indigo-500/60"
-                    >
+                    />
                     <input
                         v-model.number="tier.max_quantity"
                         dir="ltr"
                         type="number"
                         placeholder="تا"
                         class="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-left text-slate-100 outline-none focus:border-indigo-500/60"
-                    >
+                    />
                     <input
                         v-model.number="tier.price"
                         dir="ltr"
                         type="number"
                         placeholder="قیمت"
                         class="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-left text-slate-100 outline-none focus:border-indigo-500/60"
-                    >
+                    />
                     <button
                         type="button"
                         class="shrink-0 text-sm text-rose-400 hover:text-rose-300"
@@ -265,15 +263,16 @@ const submit = (): void => {
                     v-model="form.is_active"
                     type="checkbox"
                     class="size-4 rounded border-white/20 bg-slate-950"
-                >
+                />
                 محصول فعال باشد
             </label>
 
             <button
                 type="submit"
                 :disabled="form.processing"
-                class="w-full rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
+                class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
             >
+                <AppSpinner v-if="form.processing" class="size-4" />
                 ذخیره محصول
             </button>
         </form>

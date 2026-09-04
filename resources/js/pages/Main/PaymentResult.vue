@@ -52,10 +52,7 @@ const isPaid = computed(
                     class="flex items-center justify-between px-6 py-4 text-sm"
                 >
                     <span class="text-slate-400">شماره سفارش</span>
-                    <span
-                        class="font-medium text-slate-100"
-                        dir="ltr"
-                    >
+                    <span class="font-medium text-slate-100" dir="ltr">
                         {{ order.order_number }}
                     </span>
                 </div>

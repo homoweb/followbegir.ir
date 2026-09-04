@@ -2,7 +2,13 @@
 import { usePage, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
-import { PRODUCT_TYPE_LABELS, totalPriceFor, toFa, unitPriceFor } from '@/lib/ui';
+import AppSpinner from '@/components/AppSpinner.vue';
+import {
+    PRODUCT_TYPE_LABELS,
+    totalPriceFor,
+    toFa,
+    unitPriceFor,
+} from '@/lib/ui';
 import mainCheckout from '@/routes/main/checkout';
 import type { Product, SharedProps } from '@/types/followbegir';
 
@@ -51,9 +57,7 @@ const quickChips = computed(() =>
 );
 
 const unitPrice = computed(() => unitPriceFor(props.product, form.quantity));
-const totalPrice = computed(() =>
-    totalPriceFor(props.product, form.quantity),
-);
+const totalPrice = computed(() => totalPriceFor(props.product, form.quantity));
 
 const submit = (): void => {
     form.post(mainCheckout.store.url(props.product));
@@ -89,9 +93,9 @@ const submit = (): void => {
                             dir="ltr"
                             type="text"
                             required
-                            class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 outline-none transition focus:border-indigo-500/60"
+                            class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-left text-slate-100 transition outline-none focus:border-indigo-500/60"
                             placeholder="instagram"
-                        >
+                        />
                     </div>
                     <p
                         v-if="form.errors.target_username"
@@ -121,12 +125,14 @@ const submit = (): void => {
                             v-model.number="form.quantity"
                             dir="ltr"
                             type="number"
-                            class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-center text-lg text-slate-100 outline-none transition focus:border-indigo-500/60"
+                            class="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2.5 text-center text-lg text-slate-100 transition outline-none focus:border-indigo-500/60"
                             :min="minQuantity"
                             :max="maxQuantity"
                             :step="stepQuantity"
-                            @change="form.quantity = snap(Number(form.quantity))"
-                        >
+                            @change="
+                                form.quantity = snap(Number(form.quantity))
+                            "
+                        />
                         <button
                             type="button"
                             class="size-10 shrink-0 rounded-xl border border-white/10 text-lg text-slate-200 transition hover:border-indigo-500/50"
@@ -186,8 +192,9 @@ const submit = (): void => {
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="w-full rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
+                    class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
                 >
+                    <AppSpinner v-if="form.processing" class="size-4" />
                     ادامه و پرداخت
                 </button>
             </form>

@@ -3,6 +3,7 @@ import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import {
     badgeClass,
     formatDate,
@@ -41,6 +42,8 @@ const paymentOptions = Object.entries(PAYMENT_STATUS_LABELS).map(
     ([value, label]) => ({ value, label }),
 );
 
+const navigating = ref(false);
+
 const applyFilters = (): void => {
     const params: Record<string, string> = {};
 
@@ -54,24 +57,39 @@ const applyFilters = (): void => {
         params.payment_status = paymentStatus.value;
     }
 
+    navigating.value = true;
+
     router.get(adminOrders.index.url(), params, {
         preserveState: true,
+        onFinish: () => {
+            navigating.value = false;
+        },
     });
 };
 
 const go = (target: number): void => {
-    if (target < 1 || target > props.orders.last_page) {
+    if (target < 1 || target > props.orders.last_page || navigating.value) {
         return;
     }
 
-    router.get(adminOrders.index.url(), {
-        page: target,
-        ...(search.value.trim() ? { q: search.value.trim() } : {}),
-        ...(status.value ? { status: status.value } : {}),
-        ...(paymentStatus.value
-            ? { payment_status: paymentStatus.value }
-            : {}),
-    });
+    navigating.value = true;
+
+    router.get(
+        adminOrders.index.url(),
+        {
+            page: target,
+            ...(search.value.trim() ? { q: search.value.trim() } : {}),
+            ...(status.value ? { status: status.value } : {}),
+            ...(paymentStatus.value
+                ? { payment_status: paymentStatus.value }
+                : {}),
+        },
+        {
+            onFinish: () => {
+                navigating.value = false;
+            },
+        },
+    );
 };
 </script>
 
@@ -87,11 +105,11 @@ const go = (target: number): void => {
                 v-model="search"
                 type="search"
                 placeholder="جستجو در شماره سفارش یا آیدی..."
-                class="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-500/60"
-            >
+                class="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 transition outline-none focus:border-indigo-500/60"
+            />
             <select
                 v-model="status"
-                class="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-500/60"
+                class="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 transition outline-none focus:border-indigo-500/60"
             >
                 <option value="">همه وضعیت‌ها</option>
                 <option
@@ -104,7 +122,7 @@ const go = (target: number): void => {
             </select>
             <select
                 v-model="paymentStatus"
-                class="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-500/60"
+                class="rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 transition outline-none focus:border-indigo-500/60"
             >
                 <option value="">همه پرداخت‌ها</option>
                 <option
@@ -117,8 +135,10 @@ const go = (target: number): void => {
             </select>
             <button
                 type="submit"
-                class="rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-200 transition hover:border-indigo-500/50"
+                :disabled="navigating"
+                class="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-200 transition hover:border-indigo-500/50 disabled:opacity-50"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 اعمال فیلتر
             </button>
         </form>
@@ -162,15 +182,23 @@ const go = (target: number): void => {
                             {{ toFa(order.total_price) }} تومان
                         </td>
                         <td class="px-4 py-3">
-                            <span :class="badgeClass(statusBadge(order.status))">
+                            <span
+                                :class="badgeClass(statusBadge(order.status))"
+                            >
                                 {{ ORDER_STATUS_LABELS[order.status] }}
                             </span>
                         </td>
                         <td class="px-4 py-3">
                             <span
-                                :class="badgeClass(paymentBadge(order.payment_status))"
+                                :class="
+                                    badgeClass(
+                                        paymentBadge(order.payment_status),
+                                    )
+                                "
                             >
-                                {{ PAYMENT_STATUS_LABELS[order.payment_status] }}
+                                {{
+                                    PAYMENT_STATUS_LABELS[order.payment_status]
+                                }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-slate-400">
@@ -187,10 +215,11 @@ const go = (target: number): void => {
         >
             <button
                 type="button"
-                class="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
-                :disabled="orders.current_page <= 1"
+                :disabled="orders.current_page <= 1 || navigating"
+                class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
                 @click="go(orders.current_page - 1)"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 قبلی
             </button>
             <span class="text-sm text-slate-400">
@@ -199,10 +228,13 @@ const go = (target: number): void => {
             </span>
             <button
                 type="button"
-                class="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
-                :disabled="orders.current_page >= orders.last_page"
+                :disabled="
+                    orders.current_page >= orders.last_page || navigating
+                "
+                class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition disabled:opacity-40"
                 @click="go(orders.current_page + 1)"
             >
+                <AppSpinner v-if="navigating" class="size-4" />
                 بعدی
             </button>
         </div>

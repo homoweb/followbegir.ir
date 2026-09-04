@@ -1,15 +1,29 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
+import AppSpinner from '@/components/AppSpinner.vue';
 import { PRODUCT_TYPE_LABELS, toFa } from '@/lib/ui';
 import adminProducts from '@/routes/admin/products';
 import type { Product } from '@/types/followbegir';
 
 defineProps<{ products: Product[] }>();
 
+const pending = ref<number | null>(null);
+
 const toggle = (product: Product): void => {
-    router.patch(adminProducts.toggle.url(product));
+    pending.value = product.id;
+
+    router.patch(
+        adminProducts.toggle.url(product),
+        {},
+        {
+            onFinish: () => {
+                pending.value = null;
+            },
+        },
+    );
 };
 
 const destroy = (product: Product): void => {
@@ -17,7 +31,13 @@ const destroy = (product: Product): void => {
         return;
     }
 
-    router.delete(adminProducts.destroy.url(product));
+    pending.value = product.id;
+
+    router.delete(adminProducts.destroy.url(product), {
+        onFinish: () => {
+            pending.value = null;
+        },
+    });
 };
 </script>
 
@@ -80,9 +100,14 @@ const destroy = (product: Product): void => {
                             <div class="flex items-center gap-3 text-xs">
                                 <button
                                     type="button"
-                                    class="text-amber-400 hover:text-amber-300"
+                                    :disabled="pending === product.id"
+                                    class="inline-flex items-center gap-1.5 text-amber-400 transition hover:text-amber-300 disabled:opacity-50"
                                     @click="toggle(product)"
                                 >
+                                    <AppSpinner
+                                        v-if="pending === product.id"
+                                        class="size-3"
+                                    />
                                     {{ product.is_active ? 'غیرفعال' : 'فعال' }}
                                 </button>
                                 <AppLink
@@ -93,9 +118,14 @@ const destroy = (product: Product): void => {
                                 </AppLink>
                                 <button
                                     type="button"
-                                    class="text-rose-400 hover:text-rose-300"
+                                    :disabled="pending === product.id"
+                                    class="inline-flex items-center gap-1.5 text-rose-400 transition hover:text-rose-300 disabled:opacity-50"
                                     @click="destroy(product)"
                                 >
+                                    <AppSpinner
+                                        v-if="pending === product.id"
+                                        class="size-3"
+                                    />
                                     حذف
                                 </button>
                             </div>
