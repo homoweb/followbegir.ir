@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class AuthController extends Controller
 {
@@ -32,7 +33,7 @@ class AuthController extends Controller
     /**
      * Authenticate a user on the panel domain.
      */
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request): SymfonyResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -60,16 +61,29 @@ class AuthController extends Controller
         $draft = $request->session()->get('checkout_draft');
 
         if (is_array($draft) && isset($draft['product_id'])) {
-            return redirect()->away(route('main.checkout.resume'));
+            // The login form posts via Inertia (XHR), so a plain 302 "away" to
+            // the main domain would be blocked as cross-origin by the browser.
+            // Inertia::location answers with 409 + X-Inertia-Location (a full
+            // client-side page visit) for Inertia requests.
+            return Inertia::location(route('main.checkout.resume'));
         }
 
-        return redirect()->intended(route('panel.orders.index'));
+        // Only honor same-origin intended URLs. A stale cross-origin intended
+        // URL (stored before a guest redirect on the main site) would turn
+        // this XHR response into a blocked cross-origin redirect.
+        $intended = $request->session()->pull('url.intended');
+
+        if (is_string($intended) && str_starts_with($intended, config('followbegir.panel_url').'/')) {
+            return redirect()->away($intended);
+        }
+
+        return redirect()->route('panel.orders.index');
     }
 
     /**
      * Create a new panel account.
      */
-    public function register(Request $request): RedirectResponse
+    public function register(Request $request): SymfonyResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -99,7 +113,9 @@ class AuthController extends Controller
         $draft = $request->session()->get('checkout_draft');
 
         if (is_array($draft) && isset($draft['product_id'])) {
-            return redirect()->away(route('main.checkout.resume'));
+            // See login(): cross-domain redirects after the XHR register call
+            // must go through Inertia::location.
+            return Inertia::location(route('main.checkout.resume'));
         }
 
         return redirect()->route('panel.orders.index');

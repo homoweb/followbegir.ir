@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class CheckoutController extends Controller
 {
@@ -38,7 +39,7 @@ class CheckoutController extends Controller
      * Validate the order and either create it (logged-in users) or keep a
      * draft in the session so guests can continue right after login.
      */
-    public function store(Request $request, Product $product): RedirectResponse
+    public function store(Request $request, Product $product): SymfonyResponse
     {
         abort_unless($product->is_active, 404);
 
@@ -75,8 +76,17 @@ class CheckoutController extends Controller
                 'target_username' => $targetUsername,
             ]);
 
-            return redirect()->route('panel.login')
-                ->with('info', 'برای تکمیل خرید ابتدا وارد حساب کاربری خود شوید.');
+            $request->session()->flash(
+                'info',
+                'برای تکمیل خرید ابتدا وارد حساب کاربری خود شوید.',
+            );
+
+            // The frontend posts this form via Inertia (XHR), so a plain 302
+            // to the panel domain would be blocked as cross-origin by the
+            // browser. Inertia::location answers with 409 + X-Inertia-Location
+            // (a full client-side page visit) for Inertia requests and falls
+            // back to a regular redirect otherwise.
+            return Inertia::location(route('panel.login'));
         }
 
         $order = $this->orderService->createFromCheckout($user, $product, $quantity, $targetUsername);

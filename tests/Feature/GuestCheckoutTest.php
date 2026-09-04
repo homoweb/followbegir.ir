@@ -28,6 +28,28 @@ test('guest checkout stores a draft and redirects to the panel login', function 
     expect(Order::query()->count())->toBe(0);
 });
 
+test('guest checkout answers inertia requests with x-inertia-location instead of a cross-origin 302', function () {
+    $product = Product::factory()->followers()->withTiers()->create();
+
+    // The frontend posts the checkout form via Inertia (XHR). A 302 to the
+    // panel domain would be blocked by the browser as CORS, so the response
+    // must instead carry 409 + X-Inertia-Location (a full client-side
+    // page visit to the panel login).
+    $response = $this->post('https://followbegir.test/checkout/'.$product->id, [
+        'quantity' => 5000,
+        'target_username' => 'my_page',
+    ], ['X-Inertia' => 'true']);
+
+    $response->assertStatus(409);
+    expect($response->headers->get('X-Inertia-Location'))
+        ->toBe('https://panel.followbegir.test/login');
+
+    $response->assertSessionHas('checkout_draft');
+    $response->assertSessionHas('info');
+
+    expect(Order::query()->count())->toBe(0);
+});
+
 test('guest checkout resumes after registering on the panel', function () {
     $this->seed(PermissionSeeder::class);
 
@@ -65,6 +87,44 @@ test('guest checkout resumes after registering on the panel', function () {
         ->and($order->total_price)->toBe(600)
         ->and($order->status->value)->toBe('pending')
         ->and($order->payment_status->value)->toBe('unpaid');
+});
+
+test('login resumes a draft for inertia requests via x-inertia-location instead of a cross-origin 302', function () {
+    $user = User::factory()->create();
+    $product = Product::factory()->followers()->withTiers()->create();
+
+    $this->post('https://followbegir.test/checkout/'.$product->id, [
+        'quantity' => 20000,
+        'target_username' => 'another_page',
+    ]);
+
+    // The panel login form posts via Inertia (XHR). Redirecting that XHR to
+    // the main domain would be blocked as CORS; the client must perform a
+    // full page visit via 409 + X-Inertia-Location instead.
+    $response = $this->post('https://panel.followbegir.test/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ], ['X-Inertia' => 'true']);
+
+    $response->assertStatus(409);
+    expect($response->headers->get('X-Inertia-Location'))
+        ->toBe('https://followbegir.test/order/resume');
+});
+
+test('login ignores cross-origin intended urls to keep the response same-origin', function () {
+    $user = User::factory()->create();
+
+    // Simulate a stale intended URL left behind by an earlier guest redirect
+    // from the main site; following it would make the XHR response a blocked
+    // cross-origin redirect.
+    session(['url.intended' => 'https://followbegir.test/checkout/1']);
+
+    $response = $this->post('https://panel.followbegir.test/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ], ['X-Inertia' => 'true']);
+
+    $response->assertRedirect('https://panel.followbegir.test/orders');
 });
 
 test('guest checkout resumes after logging in on the panel', function () {
