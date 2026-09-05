@@ -247,7 +247,7 @@ config/
   cache.php
   database.php
   filesystems.php
-  followbegir.php
+  likeshow.php
   inertia.php
   logging.php
   mail.php
@@ -324,7 +324,7 @@ resources/
           Show.vue
     types/
       auth.ts
-      followbegir.ts
+      likeshow.ts
       global.d.ts
       index.ts
       vue-shims.d.ts
@@ -504,7 +504,7 @@ $query->where('order_number', 'like', "%{$search}%")
 ⋮----
 ->latest()
 ->with('user:id,name,email')
-->paginate(config('followbegir.order.per_page'))
+->paginate(config('likeshow.order.per_page'))
 ->through(fn (Order $order): array => [
 ⋮----
 'created_at' => $order->created_at->toIso8601String(),
@@ -673,7 +673,7 @@ $query->where('name', 'like', "%{$search}%")
 ⋮----
 ->with('roles:id,name')
 ->latest()
-->paginate(config('followbegir.order.per_page'))
+->paginate(config('likeshow.order.per_page'))
 ->through(fn (User $user): array => [
 ⋮----
 'roles' => $user->roles->pluck('name'),
@@ -953,7 +953,7 @@ public function index(Request $request): Response
 $orders = Order::query()
 ->where('user_id', $request->user()->getKey())
 ->latest()
-->paginate(config('followbegir.order.per_page'))
+->paginate(config('likeshow.order.per_page'))
 ->through(fn (Order $order): array => [
 ⋮----
 'created_at' => $order->created_at->toIso8601String(),
@@ -1297,13 +1297,13 @@ function fb_panel_url(string $path = ''): string
 function fb_admin_url(string $path = ''): string
 </file>
 
-<file path="config/followbegir.php">
+<file path="config/likeshow.php">
 use Illuminate\Support\Env;
 ⋮----
 $scheme = Env::get('FB_SCHEME', 'https');
-$mainDomain = Env::get('FB_MAIN_DOMAIN', 'followbegir.test');
-$panelDomain = Env::get('FB_PANEL_DOMAIN', 'panel.followbegir.test');
-$adminDomain = Env::get('FB_ADMIN_DOMAIN', 'admin.followbegir.test');
+$mainDomain = Env::get('FB_MAIN_DOMAIN', 'likeshow.test');
+$panelDomain = Env::get('FB_PANEL_DOMAIN', 'panel.likeshow.test');
+$adminDomain = Env::get('FB_ADMIN_DOMAIN', 'admin.likeshow.test');
 ⋮----
 'main_url' => Env::get('FB_MAIN_URL', "$scheme://$mainDomain"),
 'panel_url' => Env::get('FB_PANEL_URL', "$scheme://$panelDomain"),
@@ -1695,7 +1695,7 @@ import { toFa } from '@/lib/ui';
 import adminRoutes from '@/routes/admin';
 import mainRoutes from '@/routes/main';
 import panelRoutes from '@/routes/panel';
-import type { SharedProps } from '@/types/followbegir';
+import type { SharedProps } from '@/types/likeshow';
 const props = withDefaults(
     defineProps<{ kind?: 'landing' | 'main' | 'panel' | 'admin' }>(),
     { kind: 'main' },
@@ -1766,7 +1766,7 @@ const landingNav = [
                     >
                         ف
                     </span>
-                    فالو‌بگیر
+                    لایک شو
                     <span
                         v-if="kind === 'admin'"
                         class="rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-300 ring-1 ring-inset ring-amber-500/30"
@@ -1876,7 +1876,7 @@ const landingNav = [
                             >
                                 ف
                             </span>
-                            فالو‌بگیر
+                            لایک شو
                         </div>
                         <p
                             class="mt-4 max-w-sm text-sm leading-7 text-slate-400"
@@ -1940,11 +1940,11 @@ const landingNav = [
                             </li>
                             <li>
                                 <a
-                                    href="mailto:support@followbegir.ir"
+                                    href="mailto:support@likeshow.ir"
                                     dir="ltr"
                                     class="transition hover:text-white"
                                 >
-                                    support@followbegir.ir
+                                    support@likeshow.ir
                                 </a>
                             </li>
                             <li>پاسخگویی: همه‌روزه ۹ تا ۲۴</li>
@@ -1954,7 +1954,7 @@ const landingNav = [
                 <div
                     class="mt-10 border-t border-white/5 pt-6 text-center text-xs text-slate-500"
                 >
-                    © {{ year }} فالو‌بگیر — تمامی حقوق محفوظ است.
+                    © {{ year }} لایک شو — تمامی حقوق محفوظ است.
                 </div>
             </div>
         </footer>
@@ -2019,7 +2019,7 @@ const landingNav = [
                         </AppLink>
                     </template>
 ⋮----
-© {{ year }} فالو‌بگیر — تمامی حقوق محفوظ است.
+© {{ year }} لایک شو — تمامی حقوق محفوظ است.
 </file>
 
 <file path="resources/js/components/AppLink.vue">
@@ -2056,7 +2056,7 @@ import type {
     PaymentTxnStatusValue,
     Product,
     ProductTypeValue,
-} from '@/types/followbegir';
+} from '@/types/likeshow';
 ⋮----
 export const toFa = (value: number | string): string
 ⋮----
@@ -2094,7 +2094,7 @@ const submit = (): void => {
         <div class="mx-auto max-w-md">
             <h1 class="text-2xl font-bold text-white">ورود مدیران</h1>
             <p class="mt-1 text-sm text-slate-400">
-                ورود به پنل مدیریت فالو‌بگیر.
+                ورود به پنل مدیریت لایک شو.
             </p>
             <form
                 class="mt-8 space-y-5 rounded-2xl border border-white/10 bg-slate-900/60 p-6"
@@ -2183,7 +2183,7 @@ import type {
     OrderStatusValue,
     Paginated,
     PaymentStatusValue,
-} from '@/types/followbegir';
+} from '@/types/likeshow';
 const props = defineProps<{
     orders: Paginated<Order>;
     filters: {
@@ -2403,7 +2403,7 @@ import {
     toFa,
 } from '@/lib/ui';
 import adminOrders from '@/routes/admin/orders';
-import type { Order, OrderStatusValue } from '@/types/followbegir';
+import type { Order, OrderStatusValue } from '@/types/likeshow';
 const props = defineProps<{ order: Order }>();
 const form = useForm({
     status: props.order.status,
@@ -2609,7 +2609,7 @@ const submit = (): void => {
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import adminProducts from '@/routes/admin/products';
-import type { Option, PriceTier } from '@/types/followbegir';
+import type { Option, PriceTier } from '@/types/likeshow';
 const props = defineProps<{
     platforms: Option[];
     types: Option[];
@@ -2893,7 +2893,7 @@ const submit = (): void => {
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import adminProducts from '@/routes/admin/products';
-import type { Option, Product } from '@/types/followbegir';
+import type { Option, Product } from '@/types/likeshow';
 const props = defineProps<{
     product: Product;
     platforms: Option[];
@@ -3168,7 +3168,7 @@ import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
 import { PRODUCT_TYPE_LABELS, toFa } from '@/lib/ui';
 import adminProducts from '@/routes/admin/products';
-import type { Product } from '@/types/followbegir';
+import type { Product } from '@/types/likeshow';
 defineProps<{ products: Product[] }>();
 const toggle = (product: Product): void => {
     router.patch(adminProducts.toggle.url(product));
@@ -3434,7 +3434,7 @@ const submit = (): void => {
 import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import adminUsers from '@/routes/admin/users';
-import type { UserRow } from '@/types/followbegir';
+import type { UserRow } from '@/types/likeshow';
 const props = defineProps<{ user: UserRow }>();
 const form = useForm({
     name: props.user.name,
@@ -3589,7 +3589,7 @@ import AppLayout from '@/components/AppLayout.vue';
 import AppLink from '@/components/AppLink.vue';
 import { formatDate, toFa } from '@/lib/ui';
 import adminUsers from '@/routes/admin/users';
-import type { Paginated, SharedProps, UserRow } from '@/types/followbegir';
+import type { Paginated, SharedProps, UserRow } from '@/types/likeshow';
 const props = defineProps<{
     users: Paginated<UserRow>;
     filters: { q?: string | null };
@@ -3774,7 +3774,7 @@ import { computed } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
 import { PRODUCT_TYPE_LABELS, totalPriceFor, toFa, unitPriceFor } from '@/lib/ui';
 import mainCheckout from '@/routes/main/checkout';
-import type { Product, SharedProps } from '@/types/followbegir';
+import type { Product, SharedProps } from '@/types/likeshow';
 const props = defineProps<{ product: Product }>();
 const page = usePage();
 const user = computed(() => (page.props as unknown as SharedProps).auth.user);
@@ -3980,7 +3980,7 @@ import {
 import mainCheckout from '@/routes/main/checkout';
 import panelOrders from '@/routes/panel/orders';
 import panel from '@/routes/panel';
-import type { Product, SharedProps } from '@/types/followbegir';
+import type { Product, SharedProps } from '@/types/likeshow';
 const props = defineProps<{ products: Product[] }>();
 const page = usePage();
 const shared = computed(() => page.props as unknown as SharedProps);
@@ -4551,7 +4551,7 @@ import AppLink from '@/components/AppLink.vue';
 import { formatDate, toFa } from '@/lib/ui';
 import mainRoutes from '@/routes/main';
 import panelOrders from '@/routes/panel/orders';
-import type { Order, SharedProps } from '@/types/followbegir';
+import type { Order, SharedProps } from '@/types/likeshow';
 const props = defineProps<{ order: Order; paid_at: string | null }>();
 const page = usePage();
 const user = computed(() => (page.props as unknown as SharedProps).auth.user);
@@ -4678,7 +4678,7 @@ import { computed } from 'vue';
 import AppLayout from '@/components/AppLayout.vue';
 import { toFa } from '@/lib/ui';
 import paymentRoutes from '@/routes/main/payment';
-import type { Order } from '@/types/followbegir';
+import type { Order } from '@/types/likeshow';
 const props = defineProps<{ order: Order }>();
 const csrf = computed(
     () =>
@@ -5013,7 +5013,7 @@ import {
     toFa,
 } from '@/lib/ui';
 import panelOrders from '@/routes/panel/orders';
-import type { Order, Paginated } from '@/types/followbegir';
+import type { Order, Paginated } from '@/types/likeshow';
 const props = defineProps<{ orders: Paginated<Order> }>();
 const go = (target: number): void => {
     if (target < 1 || target > props.orders.last_page) {
@@ -5157,7 +5157,7 @@ import {
     toFa,
 } from '@/lib/ui';
 import panelOrders from '@/routes/panel/orders';
-import type { Order } from '@/types/followbegir';
+import type { Order } from '@/types/likeshow';
 const props = defineProps<{ order: Order }>();
 const rows = computed(() => [
     { label: 'شماره سفارش', value: props.order.order_number, ltr: true },
@@ -5226,7 +5226,7 @@ const rows = computed(() => [
 {{ PAYMENT_STATUS_LABELS[order.payment_status] }}
 </file>
 
-<file path="resources/js/types/followbegir.ts">
+<file path="resources/js/types/likeshow.ts">
 export type PlatformValue = string;
 ⋮----
 export type ProductTypeValue = 'followers' | 'likes';
@@ -5365,13 +5365,13 @@ $this->seed(PermissionSeeder::class);
 $this->admin = User::factory()->admin()->create();
 $this->be($this->admin);
 ⋮----
-$this->get('https://admin.followbegir.test/users')
+$this->get('https://admin.likeshow.test/users')
 ->assertOk()
 ->assertInertia(fn (Assert $page) => $page
 ->component('Admin/Users/Index')
 ->has('users.data', 1));
 ⋮----
-$this->post('https://admin.followbegir.test/users', [
+$this->post('https://admin.likeshow.test/users', [
 ⋮----
 ])->assertRedirect()->assertSessionHas('success');
 ⋮----
@@ -5381,23 +5381,23 @@ expect($created->hasRole('user'))->toBeTrue()
 ⋮----
 $target = User::factory()->create();
 ⋮----
-$this->patch('https://admin.followbegir.test/users/'.$target->id.'/toggle')
+$this->patch('https://admin.likeshow.test/users/'.$target->id.'/toggle')
 ->assertRedirect()->assertSessionHas('success');
 expect($target->refresh()->is_active)->toBeFalse();
 ⋮----
-$this->patch('https://admin.followbegir.test/users/'.$this->admin->id.'/toggle')
+$this->patch('https://admin.likeshow.test/users/'.$this->admin->id.'/toggle')
 ->assertSessionHas('error');
 expect($this->admin->refresh()->is_active)->toBeTrue();
 ⋮----
-$this->delete('https://admin.followbegir.test/users/'.$target->id)
+$this->delete('https://admin.likeshow.test/users/'.$target->id)
 ->assertSessionHas('success');
 expect(User::query()->find($target->id))->toBeNull();
 ⋮----
-$this->delete('https://admin.followbegir.test/users/'.$this->admin->id)
+$this->delete('https://admin.likeshow.test/users/'.$this->admin->id)
 ⋮----
 expect(User::query()->find($this->admin->id))->not->toBeNull();
 ⋮----
-$this->put('https://admin.followbegir.test/users/'.$target->id, [
+$this->put('https://admin.likeshow.test/users/'.$target->id, [
 ⋮----
 $target->refresh();
 expect($target->name)->toBe('نام تازه')
@@ -5406,7 +5406,7 @@ expect($target->name)->toBe('نام تازه')
 ->and($target->hasRole('admin'))->toBeTrue()
 ->and(Hash::check('newpassword123', $target->password))->toBeTrue();
 ⋮----
-$this->post('https://admin.followbegir.test/products', $payload)
+$this->post('https://admin.likeshow.test/products', $payload)
 ⋮----
 $product = Product::query()->where('title', 'فالوور اینستاگرام')->firstOrFail();
 expect($product->prices()->count())->toBe(2)
@@ -5414,31 +5414,31 @@ expect($product->prices()->count())->toBe(2)
 ⋮----
 ->assertSessionHasErrors(['platform']);
 ⋮----
-$this->put('https://admin.followbegir.test/products/'.$product->id, $payload)
+$this->put('https://admin.likeshow.test/products/'.$product->id, $payload)
 ⋮----
 $product->refresh();
 expect($product->title)->toBe('فالوور اینستاگرام پرو')
 ->and($product->prices()->count())->toBe(1);
 ⋮----
-$this->patch('https://admin.followbegir.test/products/'.$product->id.'/toggle')
+$this->patch('https://admin.likeshow.test/products/'.$product->id.'/toggle')
 ⋮----
 expect($product->refresh()->is_active)->toBeFalse();
 ⋮----
 Order::factory()->for($product)->create();
 ⋮----
-$this->delete('https://admin.followbegir.test/products/'.$product->id)
+$this->delete('https://admin.likeshow.test/products/'.$product->id)
 ->assertSessionHas('info');
 expect(Product::query()->find($product->id))->not->toBeNull()
 ->and($product->refresh()->is_active)->toBeFalse();
 ⋮----
 $plain = Product::factory()->likes()->create();
-$this->delete('https://admin.followbegir.test/products/'.$plain->id)
+$this->delete('https://admin.likeshow.test/products/'.$plain->id)
 ⋮----
 expect(Product::query()->find($plain->id))->toBeNull();
 ⋮----
 $order = Order::factory()->create();
 ⋮----
-$this->patch('https://admin.followbegir.test/orders/'.$order->id.'/status', [
+$this->patch('https://admin.likeshow.test/orders/'.$order->id.'/status', [
 ⋮----
 $order->refresh();
 expect($order->status->value)->toBe('completed')
@@ -5450,17 +5450,17 @@ $user = User::factory()->create();
 $user->assignRole('user');
 ⋮----
 $this->actingAs($user)
-->get('https://admin.followbegir.test/users')
+->get('https://admin.likeshow.test/users')
 ->assertForbidden();
 ⋮----
 $this->app['auth']->guard()->logout();
 ⋮----
-$this->post('https://admin.followbegir.test/login', [
+$this->post('https://admin.likeshow.test/login', [
 ⋮----
 ])->assertSessionHasErrors(['email']);
 $this->assertGuest();
 ⋮----
-$response = $this->get('https://admin.followbegir.test/users');
+$response = $this->get('https://admin.likeshow.test/users');
 $response->assertRedirect();
 expect($response->headers->get('Location'))->toContain('/login');
 </file>
@@ -5474,9 +5474,9 @@ use Inertia\Testing\AssertableInertia as Assert;
 ⋮----
 $product = Product::factory()->followers()->withTiers()->create();
 ⋮----
-$response = $this->post('https://followbegir.test/checkout/'.$product->id, [
+$response = $this->post('https://likeshow.test/checkout/'.$product->id, [
 ⋮----
-$response->assertRedirect('https://panel.followbegir.test/login');
+$response->assertRedirect('https://panel.likeshow.test/login');
 $response->assertSessionHas('checkout_draft');
 $response->assertSessionHas('info');
 ⋮----
@@ -5484,13 +5484,13 @@ expect(Order::query()->count())->toBe(0);
 ⋮----
 $this->seed(PermissionSeeder::class);
 ⋮----
-$this->post('https://followbegir.test/checkout/'.$product->id, [
+$this->post('https://likeshow.test/checkout/'.$product->id, [
 ⋮----
-$response = $this->post('https://panel.followbegir.test/register', [
+$response = $this->post('https://panel.likeshow.test/register', [
 ⋮----
-$response->assertRedirect('https://followbegir.test/order/resume');
+$response->assertRedirect('https://likeshow.test/order/resume');
 ⋮----
-$resume = $this->get('https://followbegir.test/order/resume');
+$resume = $this->get('https://likeshow.test/order/resume');
 ⋮----
 $resume->assertRedirect();
 expect($resume->headers->get('Location'))->toContain('/payment/review/');
@@ -5511,9 +5511,9 @@ expect($order->user_id)->toBe($user->getKey())
 ⋮----
 $user = User::factory()->create();
 ⋮----
-$response = $this->post('https://panel.followbegir.test/login', [
+$response = $this->post('https://panel.likeshow.test/login', [
 ⋮----
-$this->get('https://followbegir.test/order/resume');
+$this->get('https://likeshow.test/order/resume');
 ⋮----
 ->and($order->unit_price)->toBe(100)
 ->and($order->total_price)->toBe(2000);
@@ -5524,14 +5524,14 @@ $this->get('https://followbegir.test/order/resume');
 ⋮----
 $inactive = Product::factory()->likes()->inactive()->create();
 ⋮----
-$this->get('https://followbegir.test/checkout/'.$product->id)
+$this->get('https://likeshow.test/checkout/'.$product->id)
 ->assertOk()
 ->assertInertia(fn (Assert $page) => $page
 ->component('Main/Checkout')
 ->where('product.id', $product->id)
 ->count('product.prices', 3));
 ⋮----
-$this->get('https://followbegir.test/checkout/'.$inactive->id)
+$this->get('https://likeshow.test/checkout/'.$inactive->id)
 ->assertNotFound();
 </file>
 
@@ -5543,7 +5543,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 ⋮----
 $user = User::factory()->inactive()->create();
 ⋮----
-$this->post('https://panel.followbegir.test/login', [
+$this->post('https://panel.likeshow.test/login', [
 ⋮----
 ])->assertSessionHasErrors(['email']);
 ⋮----
@@ -5555,7 +5555,7 @@ $this->actingAs($user);
 ⋮----
 $user->forceFill(['is_active' => false])->save();
 ⋮----
-$response = $this->get('https://panel.followbegir.test/orders');
+$response = $this->get('https://panel.likeshow.test/orders');
 ⋮----
 $response->assertRedirect();
 $response->assertSessionHas('error');
@@ -5570,26 +5570,26 @@ Order::factory()->for($owner)->for($followersProduct)->count(2)->create();
 Order::factory()->for($intruder)->for($likesProduct)->create();
 ⋮----
 $this->actingAs($owner)
-->get('https://panel.followbegir.test/orders')
+->get('https://panel.likeshow.test/orders')
 ->assertOk()
 ->assertInertia(fn (Assert $page) => $page
 ->component('Panel/Orders/Index')
 ->has('orders.data', 2));
 ⋮----
 $this->actingAs($intruder)
-->get('https://panel.followbegir.test/orders/'.Order::query()->where('user_id', $owner->id)->firstOrFail()->id)
+->get('https://panel.likeshow.test/orders/'.Order::query()->where('user_id', $owner->id)->firstOrFail()->id)
 ->assertNotFound();
 ⋮----
 $own = Order::query()->where('user_id', $intruder->id)->firstOrFail();
 ⋮----
-->get('https://panel.followbegir.test/orders/'.$own->id)
+->get('https://panel.likeshow.test/orders/'.$own->id)
 ⋮----
 ->component('Panel/Orders/Show')
 ->where('order.order_number', $own->order_number));
 ⋮----
 $this->seed(PermissionSeeder::class);
 ⋮----
-$this->post('https://panel.followbegir.test/register', [
+$this->post('https://panel.likeshow.test/register', [
 ⋮----
 ])->assertSessionHasErrors(['password']);
 ⋮----
@@ -5608,7 +5608,7 @@ $product = Product::factory()->followers()->withTiers()->create();
 $order = Order::factory()->for($user)->for($product)->create([
 ⋮----
 $response = $this->actingAs($user)
-->post('https://followbegir.test/payment/start/'.$order->id);
+->post('https://likeshow.test/payment/start/'.$order->id);
 ⋮----
 $response->assertOk();
 expect(preg_match('/transactionId=(\d+)/', (string) $response->getContent(), $matches))
@@ -5630,7 +5630,7 @@ expect($payment->status->value)->toBe('success')
 ->and($payment->reference_id)->toBe($transactionId)
 ->and($payment->amount)->toBe(600);
 ⋮----
-$this->get('https://followbegir.test/payment/callback?transactionId='.$transactionId)
+$this->get('https://likeshow.test/payment/callback?transactionId='.$transactionId)
 ->assertRedirect();
 ⋮----
 expect($order->refresh()->payment_status->value)->toBe('paid')
@@ -5650,12 +5650,12 @@ $intruder = User::factory()->create();
 $order = Order::factory()->for($owner)->create();
 ⋮----
 $this->actingAs($intruder)
-->get('https://followbegir.test/payment/review/'.$order->id)
+->get('https://likeshow.test/payment/review/'.$order->id)
 ->assertForbidden();
 ⋮----
-->post('https://followbegir.test/payment/start/'.$order->id)
+->post('https://likeshow.test/payment/start/'.$order->id)
 ⋮----
-->get('https://followbegir.test/payment/result/'.$order->id)
+->get('https://likeshow.test/payment/result/'.$order->id)
 ⋮----
 $order = Order::factory()->for($user)->completed()->create();
 ⋮----
@@ -13065,7 +13065,7 @@ updates:
         "laravel-boost": {
             "command": "/Users/hossein/Library/Application Support/Herd/bin/php84",
             "args": [
-                "/Users/hossein/Documents/Work/Projects/followbegir.ir/artisan",
+                "/Users/hossein/Documents/Work/Projects/likeshow.ir/artisan",
                 "boost:mcp"
             ]
         }
@@ -17249,7 +17249,7 @@ use App\Http\Controllers\Panel\Auth\AuthController as PanelAuthController;
 use App\Http\Controllers\Panel\OrderController as PanelOrderController;
 use Illuminate\Support\Facades\Route;
 ⋮----
-Route::domain(config('followbegir.main_domain'))->name('main.')->group(function (): void {
+Route::domain(config('likeshow.main_domain'))->name('main.')->group(function (): void {
 Route::get('/', [LandingController::class, 'index'])->name('home');
 ⋮----
 Route::get('/checkout/{product}', [CheckoutController::class, 'show'])
@@ -17273,7 +17273,7 @@ Route::post('/logout', [PanelAuthController::class, 'logout'])
 Route::any('/payment/callback', [PaymentController::class, 'callback'])
 ->name('payment.callback');
 ⋮----
-Route::domain(config('followbegir.panel_domain'))->name('panel.')->group(function (): void {
+Route::domain(config('likeshow.panel_domain'))->name('panel.')->group(function (): void {
 Route::middleware('guest')->group(function (): void {
 Route::get('/login', [PanelAuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [PanelAuthController::class, 'login']);
@@ -17285,7 +17285,7 @@ Route::get('/', fn () => redirect()->route('panel.orders.index'))->name('home');
 Route::get('/orders', [PanelOrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{order}', [PanelOrderController::class, 'show'])->name('orders.show');
 ⋮----
-Route::domain(config('followbegir.admin_domain'))->name('admin.')->group(function (): void {
+Route::domain(config('likeshow.admin_domain'))->name('admin.')->group(function (): void {
 ⋮----
 Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AdminAuthController::class, 'login']);
@@ -17365,11 +17365,11 @@ trim_trailing_whitespace = false
 </file>
 
 <file path=".env.example">
-APP_NAME=FollowBegir
+APP_NAME=LikeShow
 APP_ENV=local
 APP_KEY=
 APP_DEBUG=true
-APP_URL=http://followbegir.test
+APP_URL=http://likeshow.test
 
 APP_LOCALE=fa
 APP_FALLBACK_LOCALE=fa
@@ -17390,7 +17390,7 @@ LOG_LEVEL=debug
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=followbegir
+DB_DATABASE=likeshow
 DB_USERNAME=root
 DB_PASSWORD=
 
@@ -17399,8 +17399,8 @@ SESSION_LIFETIME=120
 SESSION_ENCRYPT=false
 SESSION_PATH=/
 # Must match the shared parent domain so the session cookie works on
-# followbegir.test, panel.followbegir.test and admin.followbegir.test
-SESSION_DOMAIN=.followbegir.test
+# likeshow.test, panel.likeshow.test and admin.likeshow.test
+SESSION_DOMAIN=.likeshow.test
 
 BROADCAST_CONNECTION=log
 FILESYSTEM_DISK=local
@@ -17434,15 +17434,15 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 VITE_APP_NAME="${APP_NAME}"
 
 # --------------------------------------------------------------------------
-# FollowBegir domains (dev: *.test / production: followbegir.ir)
+# LikeShow domains (dev: *.test / production: likeshow.ir)
 # --------------------------------------------------------------------------
 FB_SCHEME=https
-FB_MAIN_DOMAIN=followbegir.test
-FB_PANEL_DOMAIN=panel.followbegir.test
-FB_ADMIN_DOMAIN=admin.followbegir.test
-# FB_MAIN_URL=https://followbegir.ir
-# FB_PANEL_URL=https://panel.followbegir.ir
-# FB_ADMIN_URL=https://admin.followbegir.ir
+FB_MAIN_DOMAIN=likeshow.test
+FB_PANEL_DOMAIN=panel.likeshow.test
+FB_ADMIN_DOMAIN=admin.likeshow.test
+# FB_MAIN_URL=https://likeshow.ir
+# FB_PANEL_URL=https://panel.likeshow.ir
+# FB_ADMIN_URL=https://admin.likeshow.ir
 
 # --------------------------------------------------------------------------
 # Payment gateway (shetabit/payment)
@@ -17456,7 +17456,7 @@ PAYMENT_CALLBACK_URL=
 # Initial admin account (created by database seeder)
 # --------------------------------------------------------------------------
 ADMIN_NAME=Administrator
-ADMIN_EMAIL=admin@followbegir.ir
+ADMIN_EMAIL=admin@likeshow.ir
 ADMIN_PASSWORD=
 </file>
 

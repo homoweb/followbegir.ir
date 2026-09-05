@@ -86,7 +86,7 @@ final class OrderService
      */
     private function generateOrderNumber(): string
     {
-        $prefix = (string) config('followbegir.order.number_prefix', 'FB');
+        $prefix = (string) config('likeshow.order.number_prefix', 'LS');
 
         for ($attempt = 0; $attempt < 5; $attempt++) {
             $candidate = sprintf(

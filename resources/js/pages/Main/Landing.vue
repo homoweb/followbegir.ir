@@ -13,7 +13,7 @@ import {
 import mainCheckout from '@/routes/main/checkout';
 import panelOrders from '@/routes/panel/orders';
 import panel from '@/routes/panel';
-import type { Product, SharedProps } from '@/types/followbegir';
+import type { Product, SharedProps } from '@/types/likeshow';
 
 const props = defineProps<{ products: Product[] }>();
 

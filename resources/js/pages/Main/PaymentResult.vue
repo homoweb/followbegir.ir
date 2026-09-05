@@ -6,7 +6,7 @@ import AppLink from '@/components/AppLink.vue';
 import { formatDate, toFa } from '@/lib/ui';
 import mainRoutes from '@/routes/main';
 import panelOrders from '@/routes/panel/orders';
-import type { Order, SharedProps } from '@/types/followbegir';
+import type { Order, SharedProps } from '@/types/likeshow';
 
 const props = defineProps<{ order: Order; paid_at: string | null }>();
 

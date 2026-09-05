@@ -6,7 +6,7 @@ import AppLink from '@/components/AppLink.vue';
 import AppSpinner from '@/components/AppSpinner.vue';
 import { formatDate, toFa } from '@/lib/ui';
 import adminUsers from '@/routes/admin/users';
-import type { Paginated, SharedProps, UserRow } from '@/types/followbegir';
+import type { Paginated, SharedProps, UserRow } from '@/types/likeshow';
 
 const props = defineProps<{
     users: Paginated<UserRow>;

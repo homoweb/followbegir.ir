@@ -15,7 +15,7 @@ import {
     toFa,
 } from '@/lib/ui';
 import adminOrders from '@/routes/admin/orders';
-import type { Order, OrderStatusValue } from '@/types/followbegir';
+import type { Order, OrderStatusValue } from '@/types/likeshow';
 
 const props = defineProps<{ order: Order }>();
 

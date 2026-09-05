@@ -73,7 +73,7 @@ class AuthController extends Controller
         // this XHR response into a blocked cross-origin redirect.
         $intended = $request->session()->pull('url.intended');
 
-        if (is_string($intended) && str_starts_with($intended, config('followbegir.panel_url').'/')) {
+        if (is_string($intended) && str_starts_with($intended, config('likeshow.panel_url').'/')) {
             return redirect()->away($intended);
         }
 

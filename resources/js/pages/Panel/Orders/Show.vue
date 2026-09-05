@@ -12,7 +12,7 @@ import {
     toFa,
 } from '@/lib/ui';
 import panelOrders from '@/routes/panel/orders';
-import type { Order } from '@/types/followbegir';
+import type { Order } from '@/types/likeshow';
 
 const props = defineProps<{ order: Order }>();
 

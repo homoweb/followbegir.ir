@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import AppSpinner from '@/components/AppSpinner.vue';
 import adminProducts from '@/routes/admin/products';
-import type { Option, Product } from '@/types/followbegir';
+import type { Option, Product } from '@/types/likeshow';
 
 const props = defineProps<{
     product: Product;

@@ -19,7 +19,7 @@ import type {
     OrderStatusValue,
     Paginated,
     PaymentStatusValue,
-} from '@/types/followbegir';
+} from '@/types/likeshow';
 
 const props = defineProps<{
     orders: Paginated<Order>;

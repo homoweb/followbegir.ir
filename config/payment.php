@@ -15,7 +15,7 @@
 use Shetabit\Multipay\Drivers\Local\Local;
 use Shetabit\Multipay\Drivers\Zarinpal\Zarinpal;
 
-$mainUrl = rtrim((string) config('followbegir.main_url'), '/');
+$mainUrl = rtrim((string) config('likeshow.main_url'), '/');
 
 return [
 
@@ -46,7 +46,7 @@ return [
         'zarinpal' => [
             'merchantId' => env('ZARINPAL_MERCHANT_ID'),
             'callbackUrl' => env('PAYMENT_CALLBACK_URL', $mainUrl.'/payment/callback'),
-            'description' => 'پرداخت سفارش فالوبگیر',
+            'description' => 'پرداخت سفارش لایک شو',
             'mode' => 'normal',
             'currency' => 'TOMAN',
         ],

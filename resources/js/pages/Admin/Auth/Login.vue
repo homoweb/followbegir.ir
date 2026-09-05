@@ -19,7 +19,7 @@ const submit = (): void => {
         <div class="mx-auto max-w-md">
             <h1 class="text-2xl font-bold text-white">ورود مدیران</h1>
             <p class="mt-1 text-sm text-slate-400">
-                ورود به پنل مدیریت فالو‌بگیر.
+                ورود به پنل مدیریت لایک شو.
             </p>
 
             <form

@@ -4,7 +4,7 @@ import type {
     PaymentTxnStatusValue,
     Product,
     ProductTypeValue,
-} from '@/types/followbegir';
+} from '@/types/likeshow';
 
 const faNumber = new Intl.NumberFormat('fa-IR');
 

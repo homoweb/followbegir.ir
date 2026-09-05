@@ -10,7 +10,7 @@ import adminProducts from '@/routes/admin/products';
 import adminUsers from '@/routes/admin/users';
 import mainRoutes from '@/routes/main';
 import panelRoutes from '@/routes/panel';
-import type { SharedProps } from '@/types/followbegir';
+import type { SharedProps } from '@/types/likeshow';
 
 const props = withDefaults(
     defineProps<{ kind?: 'landing' | 'main' | 'panel' | 'admin' }>(),
@@ -135,9 +135,9 @@ const isActiveAdminNav = (href: string): boolean => {
                     <span
                         class="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-fuchsia-500 to-indigo-500 text-sm"
                     >
-                        ف
+                        ل
                     </span>
-                    فالو‌بگیر
+                    لایک شو
                     <span
                         v-if="kind === 'admin'"
                         class="rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-300 ring-1 ring-amber-500/30 ring-inset"
@@ -299,9 +299,9 @@ const isActiveAdminNav = (href: string): boolean => {
                             <span
                                 class="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-fuchsia-500 to-indigo-500 text-sm"
                             >
-                                ف
+                                ل
                             </span>
-                            فالو‌بگیر
+                            لایک شو
                         </div>
                         <p
                             class="mt-4 max-w-sm text-sm leading-7 text-slate-400"
@@ -367,11 +367,11 @@ const isActiveAdminNav = (href: string): boolean => {
                             </li>
                             <li>
                                 <a
-                                    href="mailto:support@followbegir.ir"
+                                    href="mailto:support@likeshow.ir"
                                     dir="ltr"
                                     class="transition hover:text-white"
                                 >
-                                    support@followbegir.ir
+                                    support@likeshow.ir
                                 </a>
                             </li>
                             <li>پاسخگویی: همه‌روزه ۹ تا ۲۴</li>
@@ -382,7 +382,7 @@ const isActiveAdminNav = (href: string): boolean => {
                 <div
                     class="mt-10 border-t border-white/5 pt-6 text-center text-xs text-slate-500"
                 >
-                    © {{ year }} فالو‌بگیر — تمامی حقوق محفوظ است.
+                    © {{ year }} لایک شو — تمامی حقوق محفوظ است.
                 </div>
             </div>
         </footer>

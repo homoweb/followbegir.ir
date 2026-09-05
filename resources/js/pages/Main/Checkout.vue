@@ -10,7 +10,7 @@ import {
     unitPriceFor,
 } from '@/lib/ui';
 import mainCheckout from '@/routes/main/checkout';
-import type { Product, SharedProps } from '@/types/followbegir';
+import type { Product, SharedProps } from '@/types/likeshow';
 
 const props = defineProps<{ product: Product }>();
 

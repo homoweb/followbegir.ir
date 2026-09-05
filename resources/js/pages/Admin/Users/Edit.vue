@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import AppLayout from '@/components/AppLayout.vue';
 import AppSpinner from '@/components/AppSpinner.vue';
 import adminUsers from '@/routes/admin/users';
-import type { UserRow } from '@/types/followbegir';
+import type { UserRow } from '@/types/likeshow';
 
 const props = defineProps<{ user: UserRow }>();
 

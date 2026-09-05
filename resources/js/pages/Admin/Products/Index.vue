@@ -6,7 +6,7 @@ import AppLink from '@/components/AppLink.vue';
 import AppSpinner from '@/components/AppSpinner.vue';
 import { PRODUCT_TYPE_LABELS, toFa } from '@/lib/ui';
 import adminProducts from '@/routes/admin/products';
-import type { Product } from '@/types/followbegir';
+import type { Product } from '@/types/likeshow';
 
 defineProps<{ products: Product[] }>();
 

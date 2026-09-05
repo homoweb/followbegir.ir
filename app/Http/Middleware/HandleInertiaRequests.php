@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'siteUrl' => config('followbegir.main_url'),
+            'siteUrl' => config('likeshow.main_url'),
             // All cross-domain targets are generated server-side from named
             // routes, so the frontend never has to concatenate URL fragments.
             'urls' => [

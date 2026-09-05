@@ -6,13 +6,13 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
-    config(['session.domain' => '.followbegir.test']);
+    config(['session.domain' => '.likeshow.test']);
 });
 
 test('inactive users cannot log in on the panel', function () {
     $user = User::factory()->inactive()->create();
 
-    $this->post('https://panel.followbegir.test/login', [
+    $this->post('https://panel.likeshow.test/login', [
         'email' => $user->email,
         'password' => 'password',
     ])->assertSessionHasErrors(['email']);
@@ -27,7 +27,7 @@ test('deactivated users are logged out on their next request', function () {
 
     $user->forceFill(['is_active' => false])->save();
 
-    $response = $this->get('https://panel.followbegir.test/orders');
+    $response = $this->get('https://panel.likeshow.test/orders');
 
     $response->assertRedirect();
     $response->assertSessionHas('error');
@@ -45,19 +45,19 @@ test('panel users see only their own orders', function () {
     Order::factory()->for($intruder)->for($likesProduct)->create();
 
     $this->actingAs($owner)
-        ->get('https://panel.followbegir.test/orders')
+        ->get('https://panel.likeshow.test/orders')
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('Panel/Orders/Index')
             ->has('orders.data', 2));
 
     $this->actingAs($intruder)
-        ->get('https://panel.followbegir.test/orders/'.Order::query()->where('user_id', $owner->id)->firstOrFail()->id)
+        ->get('https://panel.likeshow.test/orders/'.Order::query()->where('user_id', $owner->id)->firstOrFail()->id)
         ->assertNotFound();
 
     $own = Order::query()->where('user_id', $intruder->id)->firstOrFail();
     $this->actingAs($intruder)
-        ->get('https://panel.followbegir.test/orders/'.$own->id)
+        ->get('https://panel.likeshow.test/orders/'.$own->id)
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('Panel/Orders/Show')
@@ -67,7 +67,7 @@ test('panel users see only their own orders', function () {
 test('registration validates password confirmation', function () {
     $this->seed(PermissionSeeder::class);
 
-    $this->post('https://panel.followbegir.test/register', [
+    $this->post('https://panel.likeshow.test/register', [
         'name' => 'کاربر مهمان',
         'email' => 'guest@example.com',
         'password' => 'password123',

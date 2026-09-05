@@ -4,7 +4,7 @@ import AppLayout from '@/components/AppLayout.vue';
 import AppSpinner from '@/components/AppSpinner.vue';
 import { toFa } from '@/lib/ui';
 import paymentRoutes from '@/routes/main/payment';
-import type { Order } from '@/types/followbegir';
+import type { Order } from '@/types/likeshow';
 
 const props = defineProps<{ order: Order }>();
 

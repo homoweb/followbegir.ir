@@ -35,7 +35,7 @@ class OrderController extends Controller
             })
             ->latest()
             ->with('user:id,name,email')
-            ->paginate(config('followbegir.order.per_page'))
+            ->paginate(config('likeshow.order.per_page'))
             ->through(fn (Order $order): array => [
                 'id' => $order->id,
                 'order_number' => $order->order_number,

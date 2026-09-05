@@ -14,7 +14,7 @@ import {
     toFa,
 } from '@/lib/ui';
 import panelOrders from '@/routes/panel/orders';
-import type { Order, Paginated } from '@/types/followbegir';
+import type { Order, Paginated } from '@/types/likeshow';
 
 const props = defineProps<{ orders: Paginated<Order> }>();
 

@@ -26,7 +26,7 @@ class UserController extends Controller
             })
             ->with('roles:id,name')
             ->latest()
-            ->paginate(config('followbegir.order.per_page'))
+            ->paginate(config('likeshow.order.per_page'))
             ->through(fn (User $user): array => [
                 'id' => $user->id,
                 'name' => $user->name,

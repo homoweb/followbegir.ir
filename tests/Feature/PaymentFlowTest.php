@@ -7,7 +7,7 @@ use App\Models\User;
 
 beforeEach(function () {
     config(['payment.default' => 'local']);
-    config(['session.domain' => '.followbegir.test']);
+    config(['session.domain' => '.likeshow.test']);
 });
 
 test('an order is fulfilled through the local gateway', function () {
@@ -21,7 +21,7 @@ test('an order is fulfilled through the local gateway', function () {
     ]);
 
     $response = $this->actingAs($user)
-        ->post('https://followbegir.test/payment/start/'.$order->id);
+        ->post('https://likeshow.test/payment/start/'.$order->id);
 
     $response->assertOk();
     expect(preg_match('/transactionId=(\d+)/', (string) $response->getContent(), $matches))
@@ -30,7 +30,7 @@ test('an order is fulfilled through the local gateway', function () {
     $transactionId = $matches[1];
 
     $callback = $this->get(
-        'https://followbegir.test/payment/callback?transactionId='.$transactionId,
+        'https://likeshow.test/payment/callback?transactionId='.$transactionId,
     );
 
     $callback->assertRedirect();
@@ -48,7 +48,7 @@ test('an order is fulfilled through the local gateway', function () {
         ->and($payment->amount)->toBe(600);
 
     // Replaying the same callback must never double-fulfill the order.
-    $this->get('https://followbegir.test/payment/callback?transactionId='.$transactionId)
+    $this->get('https://likeshow.test/payment/callback?transactionId='.$transactionId)
         ->assertRedirect();
 
     expect($order->refresh()->payment_status->value)->toBe('paid')
@@ -66,14 +66,14 @@ test('a canceled gateway callback fails the payment and keeps the order pending'
     ]);
 
     $response = $this->actingAs($user)
-        ->post('https://followbegir.test/payment/start/'.$order->id);
+        ->post('https://likeshow.test/payment/start/'.$order->id);
 
     $response->assertOk();
     expect(preg_match('/transactionId=(\d+)/', (string) $response->getContent(), $matches))
         ->toBe(1);
 
     $this->get(
-        'https://followbegir.test/payment/callback?transactionId='.$matches[1].'&cancel=true',
+        'https://likeshow.test/payment/callback?transactionId='.$matches[1].'&cancel=true',
     )->assertSessionHas('error');
 
     $payment = Payment::query()->where('order_id', $order->id)->sole();
@@ -90,15 +90,15 @@ test('orders cannot be paid or reviewed by other users', function () {
     $order = Order::factory()->for($owner)->create();
 
     $this->actingAs($intruder)
-        ->get('https://followbegir.test/payment/review/'.$order->id)
+        ->get('https://likeshow.test/payment/review/'.$order->id)
         ->assertForbidden();
 
     $this->actingAs($intruder)
-        ->post('https://followbegir.test/payment/start/'.$order->id)
+        ->post('https://likeshow.test/payment/start/'.$order->id)
         ->assertForbidden();
 
     $this->actingAs($intruder)
-        ->get('https://followbegir.test/payment/result/'.$order->id)
+        ->get('https://likeshow.test/payment/result/'.$order->id)
         ->assertForbidden();
 });
 
@@ -107,6 +107,6 @@ test('unpaid orders cannot start a second payment', function () {
     $order = Order::factory()->for($user)->completed()->create();
 
     $this->actingAs($user)
-        ->post('https://followbegir.test/payment/start/'.$order->id)
+        ->post('https://likeshow.test/payment/start/'.$order->id)
         ->assertNotFound();
 });

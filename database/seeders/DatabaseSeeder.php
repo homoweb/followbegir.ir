@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 
         $admin = User::query()->create([
             'name' => (string) env('ADMIN_NAME', 'مدیر سیستم'),
-            'email' => (string) env('ADMIN_EMAIL', 'admin@followbegir.ir'),
+            'email' => (string) env('ADMIN_EMAIL', 'admin@likeshow.ir'),
             'password' => env('ADMIN_PASSWORD', 'password'),
             'is_active' => true,
         ]);

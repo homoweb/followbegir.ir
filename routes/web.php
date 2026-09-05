@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Main site — followbegir.test
+| Main site — likeshow.test
 |--------------------------------------------------------------------------
 */
-Route::domain(config('followbegir.main_domain'))->name('main.')->group(function (): void {
+Route::domain(config('likeshow.main_domain'))->name('main.')->group(function (): void {
     Route::get('/', [LandingController::class, 'index'])->name('home');
 
     Route::get('/checkout/{product}', [CheckoutController::class, 'show'])
@@ -50,10 +50,10 @@ Route::any('/payment/callback', [PaymentController::class, 'callback'])
 
 /*
 |--------------------------------------------------------------------------
-| User panel — panel.followbegir.test
+| User panel — panel.likeshow.test
 |--------------------------------------------------------------------------
 */
-Route::domain(config('followbegir.panel_domain'))->name('panel.')->group(function (): void {
+Route::domain(config('likeshow.panel_domain'))->name('panel.')->group(function (): void {
     Route::middleware('guest')->group(function (): void {
         Route::get('/login', [PanelAuthController::class, 'showLogin'])->name('login');
         Route::post('/login', [PanelAuthController::class, 'login']);
@@ -74,10 +74,10 @@ Route::domain(config('followbegir.panel_domain'))->name('panel.')->group(functio
 
 /*
 |--------------------------------------------------------------------------
-| Admin panel — admin.followbegir.test
+| Admin panel — admin.likeshow.test
 |--------------------------------------------------------------------------
 */
-Route::domain(config('followbegir.admin_domain'))->name('admin.')->group(function (): void {
+Route::domain(config('likeshow.admin_domain'))->name('admin.')->group(function (): void {
     Route::middleware('guest')->group(function (): void {
         Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
         Route::post('/login', [AdminAuthController::class, 'login']);

@@ -18,7 +18,7 @@ class OrderController extends Controller
         $orders = Order::query()
             ->where('user_id', $request->user()->getKey())
             ->latest()
-            ->paginate(config('followbegir.order.per_page'))
+            ->paginate(config('likeshow.order.per_page'))
             ->through(fn (Order $order): array => [
                 'id' => $order->id,
                 'order_number' => $order->order_number,

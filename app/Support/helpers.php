@@ -2,11 +2,11 @@
 
 /*
 |--------------------------------------------------------------------------
-| FollowBegir global helpers
+| LikeShow global helpers
 |--------------------------------------------------------------------------
 */
 
-if (! function_exists('fb_url')) {
+if (! function_exists('ls_url')) {
     /**
      * Build an absolute URL for one of the application domains.
      *
@@ -14,41 +14,41 @@ if (! function_exists('fb_url')) {
      * emits a trailing slash on the host or a duplicated slash between
      * the host and the path (e.g. "https://panel.x//login").
      */
-    function fb_url(string $domainKey, string $path = ''): string
+    function ls_url(string $domainKey, string $path = ''): string
     {
-        $base = rtrim((string) config("followbegir.{$domainKey}_url"), '/');
+        $base = rtrim((string) config("likeshow.{$domainKey}_url"), '/');
         $path = trim($path, '/');
 
         return $path === '' ? $base : "{$base}/{$path}";
     }
 }
 
-if (! function_exists('fb_main_url')) {
+if (! function_exists('ls_main_url')) {
     /**
      * Absolute URL on the main (landing) site.
      */
-    function fb_main_url(string $path = ''): string
+    function ls_main_url(string $path = ''): string
     {
-        return fb_url('main', $path);
+        return ls_url('main', $path);
     }
 }
 
-if (! function_exists('fb_panel_url')) {
+if (! function_exists('ls_panel_url')) {
     /**
      * Absolute URL on the user panel subdomain.
      */
-    function fb_panel_url(string $path = ''): string
+    function ls_panel_url(string $path = ''): string
     {
-        return fb_url('panel', $path);
+        return ls_url('panel', $path);
     }
 }
 
-if (! function_exists('fb_admin_url')) {
+if (! function_exists('ls_admin_url')) {
     /**
      * Absolute URL on the admin panel subdomain.
      */
-    function fb_admin_url(string $path = ''): string
+    function ls_admin_url(string $path = ''): string
     {
-        return fb_url('admin', $path);
+        return ls_url('admin', $path);
     }
 }
